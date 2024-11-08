@@ -26,8 +26,6 @@ endif
 WMT_SRC_FOLDER := $(TOP)/common
 
 export TOP WMT_SRC_FOLDER TARGET_BUILD_VARIANT
-
-ifneq ($(KERNELRELEASE),)
 subdir-ccflags-y += -I$(srctree)/
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/clkbuf/src
@@ -62,8 +60,6 @@ endif
 ifeq ($(CONFIG_MTK_COMBO), y)
 ccflags-y += -D CFG_CONNADP_BUILD_IN
 endif
-
-ifeq ($(CONFIG_DRV_BUILD_IN),y)
 $(info $$CONFIG_MTK_COMBO_CHIP is [${CONFIG_MTK_COMBO_CHIP}])
 MTK_PLATFORM_ID := $(patsubst CONSYS_%,%,$(subst ",,$(CONFIG_MTK_COMBO_CHIP)))
 $(info MTK_PLATFORM_ID is [${MTK_PLATFORM_ID}])
@@ -157,12 +153,3 @@ $(info CFG_BUILD_CONNAC2 is [${CFG_BUILD_CONNAC2}])
 
 obj-y += fmradio/
 obj-y += bt/mt66xx/wmt/
-
-# Otherwise we were called directly from the command line;
-# invoke the kernel build system.
-else
-KERNELDIR ?= /lib/modules/$(shell uname -r)/build
-PWD  := $(shell pwd)
-default:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
-endif
