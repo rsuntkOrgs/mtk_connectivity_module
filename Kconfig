@@ -449,14 +449,13 @@ config MTK_CONNSYS_DEDICATED_LOG_PATH
 	  2. The scope may include (but not limited) Wi-Fi firmware log,
 	     BT firmware log, GPS firmware log etc.
 
-config WLAN_DRV_BUILD_IN
-	depends on MTK_COMBO_BT && MTK_COMBO_WIFI
+config DRV_BUILD_IN
+	select MTK_COMBO_BT
+	select MTK_COMBO_WIFI
+	select MTK_COMBO_GPS
+	select MTK_FMRADIO
+	select MTK_GPS_SUPPORT
 	bool "Build wireless related module as inline"
-	default n
+	default y
 	help
 		If enabled, this will force some module build as inline
-
-config MTK_MODULE_FORCE_INLINE_FM_GPS
-	depends on MTK_FMRADIO && MTK_GPS_SUPPORT
-	bool "Force inline gps and fm driver"
-	default n

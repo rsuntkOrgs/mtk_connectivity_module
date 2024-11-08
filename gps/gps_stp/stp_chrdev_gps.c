@@ -105,10 +105,6 @@ do { if (gDbgLevel >= GPS_LOG_DBG)	\
 		pr_info(PFX "<%s> <%d>\n", __func__, __LINE__);	\
 } while (0)
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-bool fgGps_fwlog_on;
-#endif
-
 #ifdef GPS_FWCTL_SUPPORT
 bool fgGps_fwctl_ready;
 #endif
@@ -717,13 +713,6 @@ static int GPS_hw_resume(UINT8 mode)
 
 void GPS_fwlog_ctrl(bool on)
 {
-#if (defined(GPS_FWCTL_SUPPORT) && defined(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH))
-	down(&fwctl_mtx);
-	if (fgGps_fwctl_ready)
-		GPS_fwlog_ctrl_inner(on);
-	fgGps_fwlog_on = on;
-	up(&fwctl_mtx);
-#endif
 }
 
 /* block until wmt reset happen or GPS_close */
@@ -999,10 +988,6 @@ static void gps_cdev_rst_cb(ENUM_WMTDRV_TYPE_T src,
 #ifdef GPS_FWCTL_SUPPORT
 				down(&fwctl_mtx);
 				fgGps_fwctl_ready = false;
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-				/* clean  FWLOG_CTRL_INNER flag in reference_count ,for rst*/
-				GPS_reference_count(FWLOG_CTRL_INNER, false, GPS_DATA_LINK_ID0);
-#endif
 				up(&fwctl_mtx);
 #endif
 				GPS_ctrl_status_change_to(GPS_RESET_START);
@@ -1137,12 +1122,6 @@ static int GPS_open(struct inode *inode, struct file *file)
 #ifdef GPS_FWCTL_SUPPORT
 	down(&fwctl_mtx);
 	GPS_reference_count(GPS_FWCTL_READY, true, GPS_DATA_LINK_ID0);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	if (fgGps_fwlog_on) {
-		/* GPS fw clear log on flag when GPS on, no need to send it if log setting is off */
-		GPS_reference_count(FWLOG_CTRL_INNER, fgGps_fwlog_on, GPS_DATA_LINK_ID0);
-	}
-#endif
 	up(&fwctl_mtx);
 #endif /* GPS_FWCTL_SUPPORT */
 
@@ -1168,10 +1147,6 @@ static int GPS_close(struct inode *inode, struct file *file)
 #ifdef GPS_FWCTL_SUPPORT
 	down(&fwctl_mtx);
 	GPS_reference_count(GPS_FWCTL_READY, false, GPS_DATA_LINK_ID0);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	/* GPS fw clear log on flag when GPS on, this just to clear flag in gps_drv reference count */
-	GPS_reference_count(FWLOG_CTRL_INNER, false, GPS_DATA_LINK_ID0);
-#endif
 	up(&fwctl_mtx);
 #endif
 #ifdef MTK_GENERIC_HAL
@@ -1552,9 +1527,6 @@ static int __init gps_mod_init(void)
 	#ifdef CONFIG_MTK_GPS_EMI
 	mtk_gps_emi_init();
 	#endif
-	#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	mtk_gps_fw_log_init();
-	#endif
 	return ret;
 }
 
@@ -1564,9 +1536,6 @@ static void __exit gps_mod_exit(void)
 	mtk_wcn_stpgps_drv_exit();
 	#ifdef CONFIG_MTK_GPS_EMI
 	mtk_gps_emi_exit();
-	#endif
-	#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	mtk_gps_fw_log_exit();
 	#endif
 }
 

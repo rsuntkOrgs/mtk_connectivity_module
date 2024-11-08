@@ -701,10 +701,6 @@ static void gps2_cdev_rst_cb(ENUM_WMTDRV_TYPE_T src,
 #ifdef GPS_FWCTL_SUPPORT
 				down(&fwctl_mtx);
 				fgGps_fwctl_ready = false;
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-				/* clean  FWLOG_CTRL_INNER flag in reference_count ,for rst*/
-				GPS_reference_count(FWLOG_CTRL_INNER, false, GPS_DATA_LINK_ID1);
-#endif
 				up(&fwctl_mtx);
 #endif
 				GPS2_ctrl_status_change_to(GPS_RESET_START);
@@ -783,12 +779,6 @@ static int GPS2_open(struct inode *inode, struct file *file)
 #ifdef GPS_FWCTL_SUPPORT
 	down(&fwctl_mtx);
 	GPS_reference_count(GPS_FWCTL_READY, true, GPS_DATA_LINK_ID1);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	if (fgGps_fwlog_on) {
-		/* GPS fw clear log on flag2 when GPS on, no need to send it if log setting is off */
-		GPS_reference_count(FWLOG_CTRL_INNER, fgGps_fwlog_on, GPS_DATA_LINK_ID1);
-	}
-#endif
 	up(&fwctl_mtx);
 #endif /* GPS_FWCTL_SUPPORT */
 
@@ -814,10 +804,6 @@ static int GPS2_close(struct inode *inode, struct file *file)
 #ifdef GPS_FWCTL_SUPPORT
 	down(&fwctl_mtx);
 	GPS_reference_count(GPS_FWCTL_READY, false, GPS_DATA_LINK_ID1);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	/* GPS fw clear log on flag when GPS on, this just to clear flag in gps_drv reference count */
-	GPS_reference_count(FWLOG_CTRL_INNER, false, GPS_DATA_LINK_ID1);
-#endif
 	up(&fwctl_mtx);
 #endif
 #ifdef MTK_GENERIC_HAL

@@ -111,9 +111,7 @@
 
 
 /* Android build-in driver switch, Mike 2016/11/11*/
-#ifndef CFG_BUILT_IN_DRIVER
 #define CFG_BUILT_IN_DRIVER         1 /* Rissu: Force to one */
-#endif
 
 /* Mike 2016/09/01 ALPS update K3.18 80211_disconnect to K4.4 version*/
 /* work around for any alps K3.18 platform*/
@@ -274,11 +272,7 @@
 
 #define CFG_SUPPORT_HE_ER               1
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
 #define CFG_SUPPORT_ICS                 0
-#else
-#define CFG_SUPPORT_ICS                 0
-#endif
 
 #define CFG_SUPPORT_BAR_DELAY_INDICATION	1
 
@@ -777,10 +771,6 @@
 #define CFG_TEST_ANDROID_DIRECT_GO              0
 
 #define CFG_UNITEST_P2P                         0
-
-#ifndef CONFIG_WLAN_DRV_BUILD_IN
-#define CONFIG_WLAN_DRV_BUILD_IN		1 /* Rissu: force to one */
-#endif
 
 /*
  * Enable cfg80211 option after Android 2.2(Froyo) is suggested,

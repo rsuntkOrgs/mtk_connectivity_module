@@ -29,9 +29,6 @@ endif
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
 ###############################################################################
 
-# only WMT align this design flow, but gps use this also.
-#ccflags-y += -D MTK_WCN_REMOVE_KERNEL_MODULE
-
 ifeq ($(CONFIG_ARM64), y)
     ccflags-y += -D CONFIG_MTK_WCN_ARM64
 endif
@@ -64,11 +61,10 @@ MODULE_NAME := gps_drv_stp
 obj-m += $(MODULE_NAME).o
 
 GPS_DRV_CONTROL_LNA := y
-GPS_SRC_FOLDER := $(TOP)/vendor/mediatek/kernel_modules/connectivity/gps/gps_stp
+GPS_SRC_FOLDER := $(TOP)/gps/gps_stp
 ccflags-y += -DMTK_GENERIC_HAL
 ccflags-y += -DCONFIG_GPSL5_SUPPORT
 
-WMT_SRC_FOLDER := $(TOP)/vendor/mediatek/kernel_modules/connectivity/common
 ccflags-y += -DSOC_CO_CLOCK_FLAG=0
 ccflags-y += -DWMT_CREATE_NODE_DYNAMIC=0
 ccflags-y += -DREMOVE_MK_NODE=1
@@ -77,9 +73,6 @@ ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/include
 ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/linux/include
 ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/core/include
 ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/platform/include
-ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
-ccflags-y += -I$(WMT_SRC_FOLDER)/debug_utility
-endif
 ifeq ($(GPS_DRV_CONTROL_LNA),y)
 ccflags-y += -I$(GPS_SRC_FOLDER)/lna_ctrl/inc
 endif
@@ -94,9 +87,6 @@ ifeq ($(GPS_DRV_CONTROL_LNA),y)
 endif
 ifneq ($(CONFIG_MTK_GPS_EMI),)
 $(MODULE_NAME)-objs += gps_emi.o
-endif
-ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
-$(MODULE_NAME)-objs += fw_log_gps.o
 endif
 
 endif #ifeq ($(CONFIG_MTK_GPS_SUPPORT), y)

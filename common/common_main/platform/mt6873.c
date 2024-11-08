@@ -33,9 +33,6 @@
 #include <linux/memblock.h>
 #include <linux/platform_device.h>
 #include "connsys_debug_utility.h"
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-#include "fw_log_wmt.h"
-#endif
 #include "osal_typedef.h"
 #include "mt6873.h"
 #include "mtk_wcn_consys_hw.h"
@@ -2087,17 +2084,11 @@ static INT32 consys_dedicated_log_path_init(struct platform_device *pdev)
 
 	connsys_dedicated_log_path_apsoc_init(
 		gConEmiPhyBase, &connsys_fw_log_parameter, &irq_config);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	fw_log_wmt_init();
-#endif
 	return 0;
 }
 
 static VOID consys_dedicated_log_path_deinit(VOID)
 {
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	fw_log_wmt_deinit();
-#endif
 	connsys_dedicated_log_path_apsoc_deinit();
 	osal_unsleepable_lock_deinit(&g_pwr_off_lock);
 }

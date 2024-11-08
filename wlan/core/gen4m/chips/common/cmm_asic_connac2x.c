@@ -76,10 +76,6 @@
 #include "precomp.h"
 #include "wlan_lib.h"
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-#include "fw_log_wifi.h"
-#endif /* CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH */
-
 /*******************************************************************************
 *                              C O N S T A N T S
 ********************************************************************************
@@ -2339,11 +2335,6 @@ bool asicConnac2xSwIntHandler(struct ADAPTER *prAdapter)
 	if (status == 0)
 		goto exit;
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	if (status & BIT(SW_INT_FW_LOG))
-		fw_log_wifi_irq_handler();
-#endif
-
 	if (status & BIT(SW_INT_SUBSYS_RESET)) {
 		if (kalIsResetting()) {
 #if (CFG_ANDORID_CONNINFRA_COREDUMP_SUPPORT == 1)
@@ -2370,9 +2361,6 @@ bool asicConnac2xSwIntHandler(struct ADAPTER *prAdapter)
 			update_driver_reset_status(fgIsResetting);
 
 			if (get_wifi_process_status() == 1) {
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-				fw_log_wifi_irq_handler();
-#endif
 #if (CFG_ANDORID_CONNINFRA_COREDUMP_SUPPORT == 1)
 				fw_log_connsys_coredump_start(-1, NULL);
 				g_IsNeedWaitCoredump = FALSE;

@@ -19,17 +19,8 @@ CONFIG_MTK_FMRADIO=y
 ```
 
 # Build configurations
-### A. Inline building
 ```
-CONFIG_WLAN_DRV_BUILD_IN=y
-CONFIG_MTK_MODULE_FORCE_INLINE_FM_GPS=y
+CONFIG_DRV_BUILD_IN=y
 ```
-
-### B. External modules
-```
-# CONFIG_WLAN_DRV_BUILD_IN is not set
-# CONFIG_MTK_MODULE_FORCE_INLINE_FM_GPS is not set
-```
-
 # Bootloop issue
 Bootloop can caused by insmod `/vendor/lib/modules/*.ko` conflicting with drivers inline (in case you build as inline). Remove `/vendor/lib/modules/*.ko` can solve it.

@@ -34,7 +34,6 @@ endif
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
 ###############################################################################
 
-#ccflags-y += -D MTK_WCN_REMOVE_KERNEL_MODULE
 ifeq ($(CONFIG_ARM64), y)
     ccflags-y += -D CONFIG_MTK_WCN_ARM64
 endif
@@ -112,13 +111,7 @@ endif
 
 ###############################################################################
 MODULE_NAME := wmt_drv
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
-$(warning $(MODULE_NAME) build-in boot.img)
 obj-y += $(MODULE_NAME).o
-else
-$(warning $(MODULE_NAME) is kernel module)
-obj-m += $(MODULE_NAME).o
-endif
 
 ###############################################################################
 # common_detect
@@ -251,10 +244,6 @@ $(MODULE_NAME)-objs += common_main/linux/wmt_user_proc.o
 
 $(MODULE_NAME)-objs += common_main/linux/wmt_proc_dbg.o
 $(MODULE_NAME)-objs += common_main/linux/wmt_alarm.o
-
-ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
-$(MODULE_NAME)-objs += common_main/linux/fw_log_wmt.o
-endif
 
 ifeq ($(CONFIG_MTK_BTIF),$(filter $(CONFIG_MTK_BTIF),y m))
 $(MODULE_NAME)-objs += common_main/linux/stp_btif.o

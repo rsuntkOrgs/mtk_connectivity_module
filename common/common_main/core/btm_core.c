@@ -21,9 +21,6 @@
 #include "wmt_plat.h"
 #include "wmt_detect.h"
 #include "wmt_lib.h"
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-#include "connsys_debug_utility.h"
-#endif
 #include <linux/kthread.h>
 
 #define PFX_BTM                         "[STP-BTM] "
@@ -121,9 +118,6 @@ static INT32 _stp_btm_handler(MTKSTP_BTM_T *stp_btm, P_STP_BTM_OP pStpOp)
 		if (wmt_detect_get_chip_type() == WMT_CHIP_TYPE_SOC &&
 		    mtk_wcn_stp_coredump_flag_get() != 0 && chip_reset_only == 0 &&
 		    stp_dbg_read_memdump_mode(0) != STP_DBG_MEMDUMP_NO_LOG) {
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-			connsys_dedicated_log_flush_emi();
-#endif
 			stp_dbg_core_dump_flush(0, MTK_WCN_BOOL_FALSE);
 		}
 		STP_BTM_PR_INFO("....+\n");

@@ -279,36 +279,6 @@ static uint8_t *apucCr4FwName[] = {
 	NULL
 };
 
-#if !CONFIG_WLAN_DRV_BUILD_IN
-/*----------------------------------------------------------------------------*/
-/*!
- * \brief  To leverage systrace, use the same name, i.e. tracing_mark_write,
- *         which ftrace would write when systrace writes msg to
- *         /sys/kernel/debug/tracing/trace_marker with trace_options enabling
- *         print-parent
- *
- */
-/*----------------------------------------------------------------------------*/
-void tracing_mark_write(const char *fmt, ...)
-{
-#define __BUFFER_SIZE 1024
-	va_list ap;
-	char buf[__BUFFER_SIZE];
-
-	if ((aucDebugModule[DBG_TRACE_IDX] & DBG_CLASS_TEMP) == 0)
-		return;
-
-	va_start(ap, fmt);
-	vsnprintf(buf, __BUFFER_SIZE, fmt, ap);
-	buf[__BUFFER_SIZE - 1] = '\0';
-	va_end(ap);
-
-#undef __BUFFER_SIZE
-
-	trace_printk("%s", buf);
-}
-#endif
-
 /*----------------------------------------------------------------------------*/
 /*!
  * \brief This function is provided by GLUE Layer for internal driver stack to
@@ -4577,11 +4547,6 @@ int main_thread(void *data)
 #if (CFG_SUPPORT_CONNINFRA == 1)
 	struct timespec64 time;
 #endif
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	struct CMD_CONNSYS_FW_LOG rFwLogCmd;
-	uint32_t u4BufLen;
-	uint32_t u4FwLevel = ENUM_WIFI_LOG_LEVEL_DEFAULT;
-#endif
 
 #if CFG_SUPPORT_MULTITHREAD
 	prGlueInfo->u4TxThreadPid = KAL_GET_CURRENT_THREAD_ID();
@@ -4914,27 +4879,6 @@ int main_thread(void *data)
 				prGlueInfo->prAdapter->u4FWLastUpdateTime =
 					(unsigned int)time.tv_sec;
 			}
-		}
-#endif
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-		if (!prGlueInfo->prAdapter->fgSetLogOnOff) {
-			kalMemZero(&rFwLogCmd, sizeof(rFwLogCmd));
-			rFwLogCmd.fgCmd = FW_LOG_CMD_ON_OFF;
-			rFwLogCmd.fgValue = getFWLogOnOff();
-
-			connsysFwLogControl(prGlueInfo->prAdapter,
-				(void *)&rFwLogCmd,
-				sizeof(struct CMD_CONNSYS_FW_LOG),
-				&u4BufLen);
-		}
-		if (!prGlueInfo->prAdapter->fgSetLogLevel) {
-			wlanDbgGetGlobalLogLevel(
-					ENUM_WIFI_LOG_MODULE_FW, &u4FwLevel);
-
-			wlanDbgSetLogLevelImpl(prGlueInfo->prAdapter,
-						ENUM_WIFI_LOG_LEVEL_VERSION_V1,
-						ENUM_WIFI_LOG_MODULE_FW,
-						u4FwLevel);
 		}
 #endif
 
@@ -9974,40 +9918,6 @@ kalSyncTimeToFW(IN struct ADAPTER *prAdapter, IN u_int8_t fgInitCmd,
 void
 kalSyncTimeToFWByIoctl(void)
 {
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	struct GLUE_INFO *prGlueInfo;
-
-	WIPHY_PRIV(wlanGetWiphy(), prGlueInfo);
-
-	DEBUGFUNC("kalSyncTimeToFWByIoctl");
-
-	if (getFWLogOnOff() == 1 &&
-		((prGlueInfo) && (prGlueInfo->prAdapter))) {
-		uint32_t u4BufLen = 0;
-		uint32_t rStatus = WLAN_STATUS_SUCCESS;
-		struct PARAM_CUSTOM_CHIP_CONFIG_STRUCT rChipConfigInfo;
-		struct timespec64 time;
-		unsigned int second, usecond;
-
-		ktime_get_real_ts64(&time);
-		second = (unsigned int)time.tv_sec;
-		usecond = (unsigned int)NSEC_TO_USEC(time.tv_nsec);
-
-		setTimeParameter(&rChipConfigInfo, sizeof(rChipConfigInfo),
-				second, usecond);
-
-		DBGLOG(INIT, INFO,
-				"Sync kernel time %u %u", second, usecond);
-
-		rStatus = kalIoctl(prGlueInfo, wlanoidSetChipConfig,
-				   &rChipConfigInfo, sizeof(rChipConfigInfo),
-				   FALSE, FALSE, TRUE, &u4BufLen);
-		if (rStatus == WLAN_STATUS_FAILURE)
-			DBGLOG(INIT, WARN, "Failed to sync kernel time to FW.");
-		else
-			prGlueInfo->prAdapter->u4FWLastUpdateTime = second;
-	}
-#endif
 }
 
 void kalUpdateCompHdlrRec(IN struct ADAPTER *prAdapter,

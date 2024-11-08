@@ -280,18 +280,6 @@ static UINT8 WMT_FLASH_PATCH_DWN_EVT[] = { 0x02, 0x01, 0x01, 0x00	/*length */
 	, 0x00
 };
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-static UINT8 WMT_UTC_SYNC_CMD[] = { 0x01, 0xF0, 0x09, 0x00, 0x02
-	, 0x00, 0x00, 0x00, 0x00 /*UTC time second unit*/
-	, 0x00, 0x00, 0x00, 0x00 /*UTC time microsecond unit*/
-};
-static UINT8 WMT_UTC_SYNC_EVT[] = { 0x02, 0xF0, 0x02, 0x00, 0x02, 0x00
-};
-
-static UINT8 WMT_BLANK_STATUS_CMD[] = { 0x01, 0xF0, 0x02, 0x00, 0x03, 0x00 };
-static UINT8 WMT_BLANK_STATUS_EVT[] = { 0x02, 0xF0, 0x02, 0x00, 0x03, 0x00 };
-#endif
-
 static UINT8 WMT_FW_LOG_CTRL_CMD[] = { 0x01, 0xF0, 0x04, 0x00, 0x01
 	, 0x00 /* subsys type */
 	, 0x00 /* on/off */
@@ -3349,55 +3337,7 @@ UINT32 wmt_core_get_flag_for_test(VOID)
 
 static INT32 opfunc_utc_time_sync(P_WMT_OP pWmtOp)
 {
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	INT32 iRet;
-	UINT32 u4Res;
-	UINT32 evtLen;
-	UINT8 evtBuf[16] = { 0 };
-	UINT32 tsec;
-	UINT32 tusec;
-
-	connsys_dedicated_log_get_utc_time(&tsec, &tusec);
-	/* UTC time second unit */
-	osal_memcpy(&WMT_UTC_SYNC_CMD[5], &tsec, 4);
-	/* UTC time microsecond unit */
-	osal_memcpy(&WMT_UTC_SYNC_CMD[9], &tusec, 4);
-
-	/* send command */
-	iRet = wmt_core_tx(WMT_UTC_SYNC_CMD, sizeof(WMT_UTC_SYNC_CMD),
-		&u4Res, MTK_WCN_BOOL_FALSE);
-	if (iRet) {
-		WMT_ERR_FUNC("Tx WMT_UTC_SYNC_CMD fail!(%d) len (%d, %zu)\n",
-			iRet, u4Res, sizeof(WMT_UTC_SYNC_CMD));
-		return -1;
-	}
-
-	/* receive event */
-	evtLen = osal_sizeof(WMT_UTC_SYNC_EVT);
-	iRet = wmt_core_rx(evtBuf, evtLen, &u4Res);
-	if (iRet || (u4Res != evtLen)) {
-		WMT_ERR_FUNC("WMT-CORE: read WMT_UTC_SYNC_EVT fail(%d) len(%d, %d)\n",
-			iRet, u4Res, evtLen);
-		osal_assert(0);
-		return iRet;
-	}
-
-	if (osal_memcmp(evtBuf, WMT_UTC_SYNC_EVT,
-		osal_sizeof(WMT_UTC_SYNC_EVT)) != 0) {
-		WMT_ERR_FUNC("WMT-CORE: compare WMT_UTC_SYNC_EVT error\n");
-		WMT_ERR_FUNC("WMT-CORE: rx(%d):[%02X,%02X,%02X,%02X,%02X,%02X]\n",
-			u4Res, evtBuf[0], evtBuf[1], evtBuf[2], evtBuf[3], evtBuf[4], evtBuf[5]);
-		WMT_ERR_FUNC("WMT-CORE: exp(%zu):[%02X,%02X,%02X,%02X,%02X,%02X]\n",
-			osal_sizeof(WMT_UTC_SYNC_EVT), WMT_UTC_SYNC_EVT[0],
-			WMT_UTC_SYNC_EVT[1], WMT_UTC_SYNC_EVT[2], WMT_UTC_SYNC_EVT[3],
-			WMT_UTC_SYNC_EVT[4], WMT_UTC_SYNC_EVT[5]);
-	} else {
-		WMT_INFO_FUNC("Send WMT_UTC_SYNC_CMD command OK!\n");
-	}
-	return 0;
-#else
 	return -1;
-#endif
 }
 
 static INT32 opfunc_fw_log_ctrl(P_WMT_OP pWmtOp)
@@ -3743,39 +3683,7 @@ UINT32 wmt_core_get_blank_status(VOID)
 
 INT32 wmt_blank_status_ctrl(UINT32 on_off_flag)
 {
-	INT32 iRet = 0;
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-	UINT32 u4Res;
-	UINT32 evtLen;
-	UINT8 evtBuf[16] = { 0 };
-
-	WMT_BLANK_STATUS_CMD[5] = (on_off_flag) ? 0x1 : 0x0;
-
-	/* send command */
-	iRet = wmt_core_tx((PUINT8)WMT_BLANK_STATUS_CMD, osal_sizeof(WMT_BLANK_STATUS_CMD), &u4Res,
-			   MTK_WCN_BOOL_FALSE);
-
-	if (iRet || (u4Res != osal_sizeof(WMT_BLANK_STATUS_CMD))) {
-		WMT_ERR_FUNC("WMT-CORE: WMT_BLANK_STATUS_CMD iRet(%d) cmd len err(%d, %zu)\n",
-			     (iRet == 0 ? -1 : iRet), u4Res, osal_sizeof(WMT_BLANK_STATUS_CMD));
-		return iRet;
-	}
-
-	evtLen = osal_sizeof(WMT_BLANK_STATUS_EVT);
-	iRet = wmt_core_rx(evtBuf, evtLen, &u4Res);
-	if (iRet || (u4Res != evtLen)) {
-		WMT_ERR_FUNC("WMT-CORE: read WMT_BLANK_STATUS_EVT fail(%d) len(%d, %d)\n",
-			     iRet, u4Res, evtLen);
-		WMT_INFO_FUNC("buf:[%2X,%2X,%2X,%2X,%2X] evt:[%2X,%2X,%2X,%2X,%2X]\n",
-				evtBuf[0], evtBuf[1], evtBuf[2], evtBuf[3], evtBuf[4],
-				WMT_BLANK_STATUS_EVT[0], WMT_BLANK_STATUS_EVT[1],
-				WMT_BLANK_STATUS_EVT[2], WMT_BLANK_STATUS_EVT[3],
-				WMT_BLANK_STATUS_EVT[4]);
-	}
-	else
-		wmt_lib_set_blank_status(WMT_BLANK_STATUS_CMD[5]);
-#endif
-	return iRet;
+	return 0;
 }
 
 static INT32 opfunc_blank_status_ctrl(P_WMT_OP pWmtOp)

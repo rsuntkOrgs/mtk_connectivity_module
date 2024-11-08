@@ -74,11 +74,6 @@ extern void mtk_wcn_stpgps_drv_exit(void);
 extern int mtk_gps_emi_init(void);
 extern void mtk_gps_emi_exit(void);
 #endif
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-extern int mtk_gps_fw_log_init(void);
-extern void mtk_gps_fw_log_exit(void);
-void GPS_fwlog_ctrl(bool on);
-#endif
 
 #ifdef MTK_GENERIC_HAL
 /* stp_chrdev_gps2 */
@@ -97,10 +92,6 @@ extern const struct file_operations GPS2_fops;
 #endif
 
 extern struct semaphore fwctl_mtx;
-
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-extern bool fgGps_fwlog_on;
-#endif
 
 #ifdef GPS_FWCTL_SUPPORT
 extern bool fgGps_fwctl_ready;

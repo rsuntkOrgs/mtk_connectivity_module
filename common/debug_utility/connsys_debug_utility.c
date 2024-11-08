@@ -39,11 +39,7 @@ enum FW_LOG_MODE {
 	LOG_TO_FILE = 1,
 };
 
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-static atomic_t log_mode  = ATOMIC_INIT(LOG_TO_FILE);
-#else
 static atomic_t log_mode  = ATOMIC_INIT(PRINT_TO_KERNEL_LOG);
-#endif
 
 #define CONNLOG_ALARM_STATE_DISABLE	0x0
 #define CONNLOG_ALARM_STATE_ENABLE	0x01

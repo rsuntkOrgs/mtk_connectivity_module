@@ -48,34 +48,19 @@ endif
 
 ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/include
 ccflags-y += -I$(WMT_SRC_FOLDER)/common_main/linux/include
-ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
-ccflags-y += -I$(WMT_SRC_FOLDER)/debug_utility
-endif
 ccflags-y += -I$(src)/../include/btif
 
 ###############################################################################
 
 ifneq ($(BT_PLATFORM),)
 MODULE_NAME := bt_drv_$(BT_PLATFORM)
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
+else
+MODULE_NAME := bt_drv
+endif
+
 obj-y += $(MODULE_NAME).o
-else
-obj-m += $(MODULE_NAME).o
-endif
-else
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
-NAME := bt_drv
-obj-y += $(NAME).o
-else
-NAME := bt_drv_connac1x
-obj-m += $(NAME).o
-endif
-endif
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
 $(MODULE_NAME)-objs += stp_chrdev_bt.o
 $(MODULE_NAME)-objs += btmtk_dbg.o
-ifneq ($(CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH),)
-$(MODULE_NAME)-objs += fw_log_bt.o
-endif

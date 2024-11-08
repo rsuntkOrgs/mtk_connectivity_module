@@ -890,9 +890,6 @@ static u_int8_t glResetMsgHandler(enum ENUM_WMTMSG_TYPE eMsgType,
 				DBGLOG(INIT, WARN,
 					"Whole chip reset start! reason=[%s]\n",
 					apucRstReason[eResetReason]);
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-				fw_log_wifi_irq_handler();
-#endif
 				fgIsResetting = TRUE;
 				fgSimplifyResetFlow = TRUE;
 				wifi_reset_start();
@@ -932,9 +929,6 @@ static u_int8_t glResetMsgHandler(enum ENUM_WMTMSG_TYPE eMsgType,
 				break;
 			case WMTRSTMSG_0P5RESET_START:
 				DBGLOG(INIT, WARN, "WF chip reset start!\n");
-#ifdef CONFIG_MTK_CONNSYS_DEDICATED_LOG_PATH
-				fw_log_wifi_irq_handler();
-#endif
 				fgIsResetting = TRUE;
 				fgSimplifyResetFlow = TRUE;
 				wifi_reset_start();
