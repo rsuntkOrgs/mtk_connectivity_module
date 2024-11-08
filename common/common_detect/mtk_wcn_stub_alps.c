@@ -133,11 +133,7 @@ static enum CMB_STUB_AIF_X audio2aif[] = {
 static msdc_sdio_irq_handler_t mtk_wcn_cmb_sdio_eirq_handler;
 static atomic_t sdio_claim_irq_enable_flag;
 static atomic_t irq_enable_flag;
-static pm_callback_t mtk_wcn_cmb_sdio_pm_cb;
-static void *mtk_wcn_cmb_sdio_pm_data;
 static void *mtk_wcn_cmb_sdio_eirq_data;
-
-static u32 wifi_irq = 0xffffffff;
 /*******************************************************************************
 *                  F U N C T I O N   D E C L A R A T I O N S
 ********************************************************************************
