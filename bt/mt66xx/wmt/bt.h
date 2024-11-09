@@ -49,7 +49,6 @@
 
 static uint8_t raw_buf[RAW_MAX_BYTES * 5 + 10];
 extern UINT32 gBtDbgLevel;
-static bool disable_debug = true;
 
 #if CFG_DISABLE_BT_LOG
 #define BT_LOG_PRT_DBG(fmt, arg...)
