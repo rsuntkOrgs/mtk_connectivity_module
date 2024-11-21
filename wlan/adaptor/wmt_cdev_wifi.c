@@ -48,6 +48,18 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 uint32_t gDbgLevel = WIFI_LOG_DBG;
 
+/* Disable logging, Rissu 2024/22/11 */
+#ifdef CONFIG_MTK_CONNECTIVITY_DISABLE_LOG
+#define CFG_DISABLE_LOG	1
+#endif
+
+#if CFG_DISABLE_LOG
+#define WIFI_DBG_FUNC(fmt, arg...)
+#define WIFI_INFO_FUNC(fmt, arg...)
+#define WIFI_INFO_FUNC_LIMITED(fmt, arg...)
+#define WIFI_WARN_FUNC(fmt, arg...)
+#define WIFI_ERR_FUNC(fmt, arg...)
+#else
 #define WIFI_DBG_FUNC(fmt, arg...)	\
 	do { \
 		if (gDbgLevel >= WIFI_LOG_DBG) \
@@ -73,6 +85,7 @@ uint32_t gDbgLevel = WIFI_LOG_DBG;
 		if (gDbgLevel >= WIFI_LOG_ERR) \
 			pr_info(PFX "%s[E]: " fmt, __func__, ##arg); \
 	} while (0)
+#endif /* CFG_DISABLE_LOG */
 
 #define VERSION "2.0"
 

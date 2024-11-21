@@ -1687,7 +1687,7 @@
  *------------------------------------------------------------------------------
  */
 #if CFG_MTK_ANDROID_WMT
-#define CFG_SUPPORT_SA_LOG 1
+#define CFG_SUPPORT_SA_LOG /*1*/ 0 /* Disable Standalone Log support, Rissu 2024/22/11 */
 #else
 #define CFG_SUPPORT_SA_LOG 0
 #endif

@@ -458,4 +458,10 @@ config DRV_BUILD_IN
 	bool "Build wireless related module as inline"
 	default y
 	help
-		If enabled, this will force some module build as inline
+		If enabled, this will force some module build as inline.
+		
+config MTK_CONNECTIVITY_DISABLE_LOG
+	bool "Disable logging"
+	default y
+	help
+		If this option enabled, the logging stuff will disabled.

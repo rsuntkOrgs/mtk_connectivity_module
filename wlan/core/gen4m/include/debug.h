@@ -71,8 +71,6 @@
 #define BUILD_QA_DBG 0
 #endif
 
-#define DBG_DISABLE_ALL_LOG             0
-
 /*******************************************************************************
  *                    E X T E R N A L   R E F E R E N C E S
  *******************************************************************************
@@ -644,12 +642,20 @@ enum WAKE_DATA_TYPE {
  *    #define DEBUGFUNC(_Func) static const char __FUNCTION__[] = _Func;
  * #endif
  */
-#if DBG_DISABLE_ALL_LOG
-#define DBGLOG(_Module, _Class, _Fmt)
-#define DBGLOG_LIMITED(_Module, _Class, _Fmt)
-#define DBGLOG_HEX(_Module, _Class, _StartAddr, _Length)
-#define DBGLOG_MEM8(_Module, _Class, _StartAddr, _Length)
-#define DBGLOG_MEM32(_Module, _Class, _StartAddr, _Length)
+ 
+/* Disable logging, Rissu 2024/22/11 */
+#ifdef CONFIG_MTK_CONNECTIVITY_DISABLE_LOG
+#define CFG_DISABLE_LOG	1
+#endif
+
+#if CFG_DISABLE_LOG
+#define DBGLOG(_Mod, _Clz, _Fmt, ...)
+#define DBGLOG_LIMITED(_Mod, _Clz, _Fmt, ...)
+#define DBGFWLOG(_Mod, _Clz, _Fmt, ...)
+#define TOOL_PRINTLOG(_Mod, _Clz, _Fmt, ...)
+#define DBGLOG_HEX(_Mod, _Clz, _Adr, _Len)
+#define DBGLOG_MEM8(_Mod, _Clz, _Adr, _Len)
+#define DBGLOG_MEM32(_Mod, _Clz, _Adr, _Len)
 #else
 #define DBGLOG(_Mod, _Clz, _Fmt, ...) \
 	do { \
@@ -707,7 +713,8 @@ enum WAKE_DATA_TYPE {
 			dumpMemory32((uint32_t *)(_Adr), (uint32_t)(_Len)); \
 		} \
 	}
-#endif
+#endif /* CFG_DISABLE_LOG */
+
 #define DISP_STRING(_str)       _str
 #undef ASSERT
 #undef ASSERT_REPORT
