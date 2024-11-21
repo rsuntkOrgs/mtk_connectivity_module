@@ -23,4 +23,4 @@ CONFIG_MTK_FMRADIO=y
 CONFIG_DRV_BUILD_IN=y
 ```
 # Bootloop issue
-Bootloop can caused by insmod `/vendor/lib/modules/*.ko` conflicting with drivers inline (in case you build as inline). Remove `/vendor/lib/modules/*.ko` can solve it.
+Bootloop can caused by insmod `/vendor/lib/modules/*.ko` conflicting with drivers inline. Remove `/vendor/lib/modules/*.ko` can solve it.
