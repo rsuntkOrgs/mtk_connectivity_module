@@ -390,8 +390,6 @@ else
     ccflags-y += -DCFG_WIFI_IP_SET=1
 endif
 
-ccflags-y += -DCFG_BUILT_IN_DRIVER=1
-
 ifneq ($(findstring UT_TEST_MODE,$(MTK_COMBO_CHIP)),)
 ccflags-y:=$(filter-out -UUT_TEST_MODE,$(ccflags-y))
 ccflags-y += -DUT_TEST_MODE
@@ -565,7 +563,6 @@ ifneq ($(PLATFORM_FLAGS), )
 endif
 
 obj-y += $(MODULE_NAME).o
-ccflags-y += -DCONFIG_WLAN_DRV_BUILD_IN=1
 
 ifneq ($(filter yes,$(MTK_TC10_IN_HOUSE)),)
 ccflags-y += -DMTK_TC10_IN_HOUSE

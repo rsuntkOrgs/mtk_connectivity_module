@@ -969,8 +969,6 @@ static void BT_exit(void)
 	BT_LOG_PRT_INFO("%s driver removed\n", BT_DRIVER_NAME);
 }
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-
 int mtk_wcn_stpbt_drv_init(void)
 {
 	return BT_init();
@@ -982,10 +980,3 @@ void mtk_wcn_stpbt_drv_exit(void)
 	return BT_exit();
 }
 EXPORT_SYMBOL(mtk_wcn_stpbt_drv_exit);
-
-#else
-
-module_init(BT_init);
-module_exit(BT_exit);
-
-#endif

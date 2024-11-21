@@ -34,12 +34,6 @@
 *                              C O N S T A N T S
 ********************************************************************************
 */
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-#define MTK_WCN_REMOVE_KO 1
-#else
-#define MTK_WCN_REMOVE_KO 0
-#endif
-
 #include "sdio_detect.h"
 #include "wmt_detect_pwr.h"
 #include <mtk_wcn_cmb_stub.h>

@@ -1621,11 +1621,6 @@ static INT32 WMT_init(VOID)
 
 	osal_unsleepable_lock_init(&g_temp_query_spinlock);
 
-#if (MTK_WCN_REMOVE_KO)
-	/* called in do_common_drv_init() */
-#else
-	mtk_wcn_hif_sdio_drv_init();
-#endif
 	stp_drv_init();
 
 	ret = register_chrdev_region(devID, WMT_DEV_NUM, WMT_DRIVER_NAME);
@@ -1721,13 +1716,6 @@ static INT32 WMT_init(VOID)
 		WMT_DBG_FUNC("wmt register fb_notifier OK!\n");
 #endif /* CONFIG_EARLYSUSPEND */
 	WMT_DBG_FUNC("success\n");
-
-#if (MTK_WCN_REMOVE_KO)
-	/* called in do_common_drv_init() */
-#else
-	mtk_wcn_stp_uart_drv_init();
-	mtk_wcn_stp_sdio_drv_init();
-#endif
 
 	return 0;
 

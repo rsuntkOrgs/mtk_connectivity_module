@@ -1936,11 +1936,6 @@ u_int8_t kalSendUevent(const char *src);
 int _kalSnprintf(char *buf, size_t size, const char *fmt, ...);
 int _kalSprintf(char *buf, const char *fmt, ...);
 
-/* systrace utilities */
-#if !CONFIG_WLAN_DRV_BUILD_IN
-void tracing_mark_write(const char *fmt, ...);
-#endif
-
 uint32_t kalSetSuspendFlagToEMI(IN struct ADAPTER
 	*prAdapter, IN u_int8_t fgSuspend);
 

@@ -98,9 +98,6 @@ $(info WIFI_IP_SET is 1)
 export WIFI_IP_SET=1
 endif
 
-# Do build-in for xxx.c checking
-subdir-ccflags-y += -D MTK_WCN_REMOVE_KERNEL_MODULE
-subdir-ccflags-y += -D MTK_WCN_BUILT_IN_DRIVER
 obj-y += common/
 obj-y += wlan/core/gen4m/
 obj-y += wlan/adaptor/

@@ -27,7 +27,6 @@ static void gps_dl_mod_exit(void)
 	mtk_gps_data_link_devices_exit();
 }
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
 int mtk_wcn_gpsdl_drv_init(void)
 {
 	return gps_dl_mod_init();
@@ -40,13 +39,6 @@ void mtk_wcn_gpsdl_drv_exit(void)
 }
 EXPORT_SYMBOL(mtk_wcn_gpsdl_drv_exit);
 
-#else
-module_init(gps_dl_mod_init);
-module_exit(gps_dl_mod_exit);
-
-#endif
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Hua Fu");
 #endif
-

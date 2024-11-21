@@ -20,8 +20,6 @@
 #include "wmt_detect.h"
 #include "common_drv_init.h"
 
-
-#if (MTK_WCN_REMOVE_KO)
 int do_common_drv_init(int chip_id)
 {
 	int i_ret = 0;
@@ -55,5 +53,3 @@ int do_common_drv_init(int chip_id)
 	return i_ret;
 
 }
-#endif
-

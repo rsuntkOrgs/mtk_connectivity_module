@@ -24,9 +24,7 @@
 #include "wmt_gpio.h"
 #include "wmt_dev.h"
 
-#if MTK_WCN_REMOVE_KO
 #include "conn_drv_init.h"
-#endif
 #ifdef CONFIG_COMPAT
 #include <linux/compat.h>
 #endif
@@ -128,14 +126,9 @@ static long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsig
 		break;
 
 	case COMBO_IOCTL_DO_MODULE_INIT:
-#if (MTK_WCN_REMOVE_KO)
 		/*deinit SDIO-DETECT module */
 		WMT_DETECT_PR_INFO("built-in mode\n");
 		retval = do_connectivity_driver_init(arg);
-#else
-		WMT_DETECT_PR_INFO("kernel object mode\n");
-		retval = mtk_wcn_common_drv_init();
-#endif
 		break;
 
 	default:

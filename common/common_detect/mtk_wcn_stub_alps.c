@@ -23,12 +23,6 @@
 ********************************************************************************
 */
 
-
-/* kernel wmt_build_in_adapter.c already has these, so always ignored */
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-#undef MTK_WCN_REMOVE_KERNEL_MODULE
-#endif
-
 /*******************************************************************************
 *                                 M A C R O S
 ********************************************************************************
@@ -39,6 +33,16 @@
 
 int gCmbStubLogLevel = CMB_STUB_INFO_LOG;
 
+/* Disable logging, Rissu 2024/22/11 */
+#ifdef CONFIG_MTK_CONNECTIVITY_DISABLE_LOG
+#define CFG_DISABLE_LOG	1
+#endif
+
+#if CFG_DISABLE_LOG
+#define CMB_STUB_LOG_PR_INFO(fmt, arg...)
+#define CMB_STUB_LOG_PR_WARN(fmt, arg...)
+#define CMB_STUB_LOG_PR_DBG(fmt, arg...)
+#else
 #define CMB_STUB_LOG_PR_INFO(fmt, arg...) \
 do { \
 	if (gCmbStubLogLevel >= CMB_STUB_INFO_LOG) \
@@ -54,6 +58,7 @@ do { \
 	if (gCmbStubLogLevel >= CMB_STUB_DBG_LOG) \
 		pr_info(fmt, ##arg); \
 } while (0)
+#endif /* CFG_DISABLE_LOG */
 
 /*******************************************************************************
 *                    E X T E R N A L   R E F E R E N C E S
@@ -95,22 +100,6 @@ int gConnectivityChipId = -1;
 char *wmt_uart_port_desc = "ttyMT2";
 EXPORT_SYMBOL(wmt_uart_port_desc);
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-static void mtk_wcn_cmb_sdio_request_eirq(msdc_sdio_irq_handler_t irq_handler, void *data);
-static void mtk_wcn_cmb_sdio_enable_eirq(void);
-static void mtk_wcn_cmb_sdio_disable_eirq(void);
-static void mtk_wcn_cmb_sdio_register_pm(pm_callback_t pm_cb, void *data);
-
-struct sdio_ops mt_sdio_ops[4] = {
-	{NULL, NULL, NULL, NULL},
-	{NULL, NULL, NULL, NULL},
-	{mtk_wcn_cmb_sdio_request_eirq, mtk_wcn_cmb_sdio_enable_eirq,
-		mtk_wcn_cmb_sdio_disable_eirq, mtk_wcn_cmb_sdio_register_pm},
-	{mtk_wcn_cmb_sdio_request_eirq, mtk_wcn_cmb_sdio_enable_eirq,
-		mtk_wcn_cmb_sdio_disable_eirq, mtk_wcn_cmb_sdio_register_pm}
-};
-#endif
-
 /*******************************************************************************
 *                           P R I V A T E   D A T A
 ********************************************************************************
@@ -138,26 +127,14 @@ static enum CMB_STUB_AIF_X audio2aif[] = {
 };
 #endif
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-static msdc_sdio_irq_handler_t mtk_wcn_cmb_sdio_eirq_handler;
-static atomic_t sdio_claim_irq_enable_flag;
-static atomic_t irq_enable_flag;
-static pm_callback_t mtk_wcn_cmb_sdio_pm_cb;
-static void *mtk_wcn_cmb_sdio_pm_data;
-static void *mtk_wcn_cmb_sdio_eirq_data;
-
-static u32 wifi_irq = 0xffffffff;
-#endif
 /*******************************************************************************
 *                  F U N C T I O N   D E C L A R A T I O N S
 ********************************************************************************
 */
 
-#ifndef MTK_WCN_REMOVE_KERNEL_MODULE
 static int _mtk_wcn_cmb_stub_query_ctrl(void);
 static int _mtk_wcn_cmb_stub_trigger_assert(void);
 static void _mtk_wcn_cmb_stub_clock_fail_dump(void);
-#endif /* MTK_WCN_REMOVE_KERNEL_MODULE */
 
 /*******************************************************************************
 *                              F U N C T I O N S
@@ -176,11 +153,9 @@ static void _mtk_wcn_cmb_stub_clock_fail_dump(void);
  */
 int mtk_wcn_cmb_stub_reg(struct _CMB_STUB_CB_ *p_stub_cb)
 {
-#ifndef MTK_WCN_REMOVE_KERNEL_MODULE
 	struct wmt_platform_bridge pbridge;
 
 	memset(&pbridge, 0, sizeof(struct wmt_platform_bridge));
-#endif
 
 	if ((!p_stub_cb)
 	    || (p_stub_cb->size != sizeof(struct _CMB_STUB_CB_))) {
@@ -200,12 +175,10 @@ int mtk_wcn_cmb_stub_reg(struct _CMB_STUB_CB_ *p_stub_cb)
 	cmb_stub_do_reset_cb = p_stub_cb->wmt_do_reset_cb;
 	cmb_stub_clock_fail_dump_cb = p_stub_cb->clock_fail_dump_cb;
 
-#ifndef MTK_WCN_REMOVE_KERNEL_MODULE
 	pbridge.thermal_query_cb = _mtk_wcn_cmb_stub_query_ctrl;
 	pbridge.trigger_assert_cb = _mtk_wcn_cmb_stub_trigger_assert;
 	pbridge.clock_fail_dump_cb = _mtk_wcn_cmb_stub_clock_fail_dump;
 	wmt_export_platform_bridge_register(&pbridge);
-#endif
 
 	return 0;
 }
@@ -220,9 +193,7 @@ EXPORT_SYMBOL(mtk_wcn_cmb_stub_reg);
  */
 int mtk_wcn_cmb_stub_unreg(void)
 {
-#ifndef MTK_WCN_REMOVE_KERNEL_MODULE
 	wmt_export_platform_bridge_unregister();
-#endif
 
 	cmb_stub_aif_ctrl_cb = NULL;
 	cmb_stub_func_ctrl_cb = NULL;
@@ -279,11 +250,7 @@ void mtk_wcn_cmb_stub_func_ctrl(unsigned int type, unsigned int on)
 }
 EXPORT_SYMBOL(mtk_wcn_cmb_stub_func_ctrl);
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-int mtk_wcn_cmb_stub_query_ctrl(void)
-#else
 static int _mtk_wcn_cmb_stub_query_ctrl(void)
-#endif
 {
 	signed long temp = 0;
 
@@ -295,11 +262,7 @@ static int _mtk_wcn_cmb_stub_query_ctrl(void)
 	return temp;
 }
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-int mtk_wcn_cmb_stub_trigger_assert(void)
-#else
 static int _mtk_wcn_cmb_stub_trigger_assert(void)
-#endif
 {
 	int ret = 0;
 
@@ -311,7 +274,6 @@ static int _mtk_wcn_cmb_stub_trigger_assert(void)
 	return ret;
 }
 
-#ifndef MTK_WCN_REMOVE_KERNEL_MODULE
 void _mtk_wcn_cmb_stub_clock_fail_dump(void)
 {
 	if (cmb_stub_clock_fail_dump_cb)
@@ -319,7 +281,6 @@ void _mtk_wcn_cmb_stub_clock_fail_dump(void)
 	else
 		CMB_STUB_LOG_PR_WARN("[cmb_stub] clock_fail_dump_cb null\n");
 }
-#endif
 
 /*platform-related APIs*/
 /* void clr_device_working_ability(UINT32 clockId, MT6573_STATE state); */
@@ -442,92 +403,6 @@ int mtk_wcn_cmb_stub_do_reset(unsigned int type)
 }
 EXPORT_SYMBOL(mtk_wcn_cmb_stub_do_reset);
 
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-static void mtk_wcn_cmb_sdio_enable_eirq(void)
-{
-	if (atomic_read(&irq_enable_flag))
-		CMB_STUB_LOG_PR_DBG("wifi eint has been enabled\n");
-	else {
-		atomic_set(&irq_enable_flag, 1);
-		if (wifi_irq != 0xffffffff) {
-			enable_irq(wifi_irq);
-			CMB_STUB_LOG_PR_DBG(" enable WIFI EINT irq %d !!\n",
-					wifi_irq);
-		}
-	}
-}
-
-static void mtk_wcn_cmb_sdio_disable_eirq(void)
-{
-	if (!atomic_read(&irq_enable_flag))
-		CMB_STUB_LOG_PR_DBG("wifi eint has been disabled!\n");
-	else {
-		if (wifi_irq != 0xffffffff) {
-			disable_irq_nosync(wifi_irq);
-			CMB_STUB_LOG_PR_DBG("disable WIFI EINT irq %d !!\n",
-					wifi_irq);
-		}
-		atomic_set(&irq_enable_flag, 0);
-	}
-}
-
-irqreturn_t mtk_wcn_cmb_sdio_eirq_handler_stub(int irq, void *data)
-{
-	if ((mtk_wcn_cmb_sdio_eirq_handler != NULL) && (atomic_read(&sdio_claim_irq_enable_flag) != 0))
-		mtk_wcn_cmb_sdio_eirq_handler(mtk_wcn_cmb_sdio_eirq_data);
-	return IRQ_HANDLED;
-}
-
-static void mtk_wcn_cmb_sdio_request_eirq(msdc_sdio_irq_handler_t irq_handler, void *data)
-{
-	struct device_node *node;
-	int ret = -EINVAL;
-#if 0
-	unsigned int gpio_wifi_eint_pin;
-#endif
-
-	CMB_STUB_LOG_PR_INFO("enter %s\n", __func__);
-	mtk_wcn_sdio_irq_flag_set(0);
-	atomic_set(&irq_enable_flag, 1);
-	mtk_wcn_cmb_sdio_eirq_data = data;
-	mtk_wcn_cmb_sdio_eirq_handler = irq_handler;
-
-	node = (struct device_node *)of_find_compatible_node(NULL, NULL, "mediatek,connectivity-combo");
-	if (node) {
-#if 0
-		gpio_wifi_eint_pin = of_get_gpio(node, 5);
-		CMB_STUB_LOG_PR_INFO("WIFI EINT pin %d !!\n",
-				gpio_wifi_eint_pin);
-		wifi_irq = gpio_to_irq(gpio_wifi_eint_pin);
-#else
-		wifi_irq = irq_of_parse_and_map(node, 0);/* get wifi eint num */
-#endif
-#if 1
-		ret = request_irq(wifi_irq, mtk_wcn_cmb_sdio_eirq_handler_stub, IRQF_TRIGGER_LOW,
-				"WIFI-eint", NULL);
-		CMB_STUB_LOG_PR_DBG("WIFI EINT irq %d !!\n", wifi_irq);
-#endif
-
-		if (ret)
-			CMB_STUB_LOG_PR_WARN("EINT IRQ LINE NOT AVAILABLE!!\n");
-		else
-			mtk_wcn_cmb_sdio_disable_eirq();/*not ,chip state is power off*/
-	} else
-		CMB_STUB_LOG_PR_WARN("[%s] can't find device node\n", __func__);
-
-	CMB_STUB_LOG_PR_INFO("exit %s\n", __func__);
-}
-
-static void mtk_wcn_cmb_sdio_register_pm(pm_callback_t pm_cb, void *data)
-{
-	CMB_STUB_LOG_PR_DBG("mtk_wcn_cmb_sdio_register_pm (0x%p, 0x%p)\n",
-			pm_cb, data);
-	/* register pm change callback */
-	mtk_wcn_cmb_sdio_pm_cb = pm_cb;
-	mtk_wcn_cmb_sdio_pm_data = data;
-}
-#endif /* MTK_WCN_REMOVE_KERNEL_MODULE */
-
 static void mtk_wcn_cmb_sdio_on(int sdio_port_num)
 {
 	pm_message_t state = {.event = PM_EVENT_USER_RESUME };
@@ -535,11 +410,7 @@ static void mtk_wcn_cmb_sdio_on(int sdio_port_num)
 	CMB_STUB_LOG_PR_INFO("mtk_wcn_cmb_sdio_on (%d)\n", sdio_port_num);
 
 	/* 1. disable sdio eirq */
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-	mtk_wcn_cmb_sdio_disable_eirq();
-#else
 	wmt_export_mtk_wcn_cmb_sdio_disable_eirq();
-#endif
 
 	/* 2. call sd callback */
 	if (mtk_wcn_cmb_sdio_pm_cb) {
@@ -567,11 +438,7 @@ static void mtk_wcn_cmb_sdio_off(int sdio_port_num)
 		CMB_STUB_LOG_PR_WARN("mtk_wcn_cmb_sdio_off no sd callback!!\n");
 
 	/* 2. disable sdio eirq */
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-	mtk_wcn_cmb_sdio_disable_eirq();
-#else
 	wmt_export_mtk_wcn_cmb_sdio_disable_eirq();
-#endif
 }
 
 int board_sdio_ctrl(unsigned int sdio_port_num, unsigned int on)
@@ -603,19 +470,3 @@ int board_sdio_ctrl(unsigned int sdio_port_num, unsigned int on)
 	return 0;
 }
 EXPORT_SYMBOL(board_sdio_ctrl);
-
-#ifdef MTK_WCN_REMOVE_KERNEL_MODULE
-int mtk_wcn_sdio_irq_flag_set(int flag)
-{
-	if (flag != 0)
-		atomic_set(&sdio_claim_irq_enable_flag, 1);
-	else
-		atomic_set(&sdio_claim_irq_enable_flag, 0);
-
-	CMB_STUB_LOG_PR_DBG("sdio_claim_irq_enable_flag:%d\n",
-			atomic_read(&sdio_claim_irq_enable_flag));
-
-	return atomic_read(&sdio_claim_irq_enable_flag);
-}
-EXPORT_SYMBOL(mtk_wcn_sdio_irq_flag_set);
-#endif
