@@ -7266,51 +7266,6 @@ int32_t mtk_cfg80211_process_str_cmd(IN struct wiphy *wiphy,
 		return testmode_set_scan_param(wiphy, cmd, len);
 	} else if (strnicmp(cmd, "GET_CU", 6) == 0) {
 		return testmode_get_cu(wiphy, cmd, len, ucBssIndex);
-	} else if (strnicmp(cmd, "SET_DEBUG_LEVEL ", 16) == 0) {
-		struct CMD_CONNSYS_FW_LOG rFwLogCmd;
-		uint32_t u4BufLen;
-
-		kalMemZero(&rFwLogCmd, sizeof(rFwLogCmd));
-		rFwLogCmd.fgCmd = FW_LOG_CMD_ON_OFF;
-		rFwLogCmd.fgEarlySet = FALSE;
-
-		if (strnicmp(cmd+16, "1", 1) == 0) {
-			DBGLOG(REQ, INFO,
-				"Set log level to DEFAULT\n");
-
-			rFwLogCmd.fgValue = 0;
-			kalIoctl(prGlueInfo,
-				connsysFwLogControl,
-				&rFwLogCmd,
-				sizeof(struct CMD_CONNSYS_FW_LOG),
-				FALSE, FALSE, FALSE,
-				&u4BufLen);
-		} else if (strnicmp(cmd+16, "2", 1) == 0) {
-			DBGLOG(REQ, INFO,
-				"Set log level to MORE\n");
-
-			rFwLogCmd.fgValue = 1;
-			kalIoctl(prGlueInfo,
-				connsysFwLogControl,
-				&rFwLogCmd,
-				sizeof(struct CMD_CONNSYS_FW_LOG),
-				FALSE, FALSE, FALSE,
-				&u4BufLen);
-		} else if (strnicmp(cmd+16, "3", 1) == 0) {
-			DBGLOG(REQ, INFO,
-				"Set log level to EXTREME\n");
-
-			rFwLogCmd.fgValue = 2;
-			kalIoctl(prGlueInfo,
-				connsysFwLogControl,
-				&rFwLogCmd,
-				sizeof(struct CMD_CONNSYS_FW_LOG),
-				FALSE, FALSE, FALSE,
-				&u4BufLen);
-		} else {
-			DBGLOG(REQ, WARN, "Invalid log level.\n");
-		}
-#endif
 	} else
 		return -EOPNOTSUPP;
 
@@ -7320,18 +7275,6 @@ int32_t mtk_cfg80211_process_str_cmd(IN struct wiphy *wiphy,
 #endif /* CONFIG_NL80211_TESTMODE */
 
 #if (CFG_SUPPORT_SINGLE_SKU == 1)
-
-#if (CFG_BUILT_IN_DRIVER == 1)
-/* in kernel-x.x/net/wireless/reg.c */
-#else
-bool is_world_regdom(const char *alpha2)
-{
-	if (!alpha2)
-		return false;
-
-	return (alpha2[0] == '0') && (alpha2[1] == '0');
-}
-#endif
 
 enum regd_state regd_state_machine(IN struct regulatory_request *pRequest)
 {
