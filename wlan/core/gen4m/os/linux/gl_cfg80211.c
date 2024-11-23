@@ -7266,6 +7266,7 @@ int32_t mtk_cfg80211_process_str_cmd(IN struct wiphy *wiphy,
 		return testmode_set_scan_param(wiphy, cmd, len);
 	} else if (strnicmp(cmd, "GET_CU", 6) == 0) {
 		return testmode_get_cu(wiphy, cmd, len, ucBssIndex);
+#endif		
 	} else
 		return -EOPNOTSUPP;
 
