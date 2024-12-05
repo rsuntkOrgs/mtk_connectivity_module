@@ -71,6 +71,13 @@
 
 static UINT32 g2DbgLevel = GPS2_LOG_DBG;
 
+#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#define GPS2_DBG_FUNC(fmt, arg...)
+#define GPS2_INFO_FUNC(fmt, arg...)
+#define GPS2_WARN_FUNC(fmt, arg...)
+#define GPS2_ERR_FUNC(fmt, arg...)
+#define GPS2_TRC_FUNC(f)
+#else
 #define GPS2_DBG_FUNC(fmt, arg...)	\
 do { if (g2DbgLevel >= GPS2_LOG_DBG)	\
 		pr_debug(PFX2 "[D]%s: "  fmt, __func__, ##arg);	\
@@ -91,6 +98,7 @@ do { if (g2DbgLevel >= GPS2_LOG_ERR)	\
 do { if (g2DbgLevel >= GPS2_LOG_DBG)	\
 		pr_info(PFX2 "<%s> <%d>\n", __func__, __LINE__);	\
 } while (0)
+#endif
 
 struct wakeup_source *gps2_wake_lock_ptr;
 const char gps2_wake_lock_name[] = "gps2wakelock";

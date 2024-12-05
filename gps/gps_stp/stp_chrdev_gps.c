@@ -84,6 +84,13 @@ static UINT32 md_status_addr;
 
 static UINT32 gDbgLevel = GPS_LOG_DBG;
 
+#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#define GPS_DBG_FUNC(fmt, arg...)
+#define GPS_INFO_FUNC(fmt, arg...)
+#define GPS_WARN_FUNC(fmt, arg...)
+#define GPS_ERR_FUNC(fmt, arg...)
+#define GPS_TRC_FUNC(f)
+#else
 #define GPS_DBG_FUNC(fmt, arg...)	\
 do { if (gDbgLevel >= GPS_LOG_DBG)	\
 		pr_debug(PFX "[D]%s: "  fmt, __func__, ##arg);	\
@@ -104,6 +111,7 @@ do { if (gDbgLevel >= GPS_LOG_ERR)	\
 do { if (gDbgLevel >= GPS_LOG_DBG)	\
 		pr_info(PFX "<%s> <%d>\n", __func__, __LINE__);	\
 } while (0)
+#endif
 
 #ifdef GPS_FWCTL_SUPPORT
 bool fgGps_fwctl_ready;

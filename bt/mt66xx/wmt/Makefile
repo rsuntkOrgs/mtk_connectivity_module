@@ -61,7 +61,6 @@ endif
 obj-y += $(MODULE_NAME).o
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
-ccflags-y += -DCFG_DISABLE_BT_LOG=1
 
 $(MODULE_NAME)-objs += stp_chrdev_bt.o
 $(MODULE_NAME)-objs += btmtk_dbg.o

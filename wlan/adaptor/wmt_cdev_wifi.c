@@ -49,6 +49,13 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 uint32_t gDbgLevel = WIFI_LOG_DBG;
 
+#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#define WIFI_DBG_FUNC(fmt, arg...)
+#define WIFI_INFO_FUNC(fmt, arg...)
+#define WIFI_INFO_FUNC_LIMITED(fmt, arg...)
+#define WIFI_WARN_FUNC(fmt, arg...)
+#define WIFI_ERR_FUNC(fmt, arg...)
+#else
 #define WIFI_DBG_FUNC(fmt, arg...)	\
 	do { \
 		if (gDbgLevel >= WIFI_LOG_DBG) \
@@ -73,6 +80,7 @@ uint32_t gDbgLevel = WIFI_LOG_DBG;
 	do { \
 		pr_info(PFX "%s[E]: " fmt, __func__, ##arg); \
 	} while (0)
+#endif
 
 #define VERSION "2.0"
 

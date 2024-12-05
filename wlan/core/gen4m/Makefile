@@ -8,7 +8,9 @@ $(warning TARGET_PRODUCT is empty! using default option.)
 endif
 
 # disable logs!
+ifeq ($(CONFIG_MTK_CONNECTIVITY_LOG),y)
 ccflags-y += -DDBG_DISABLE_ALL_LOG=1
+endif
 
 # ---------------------------------------------------
 # OS option
@@ -967,9 +969,35 @@ endif
 # Service git List
 # ---------------------------------------------------
 
-# Rissu: Disable wlan_service!
+SERVICE_DIR  := wlan_service/
+MTK_WLAN_SERVICE_PATH := $(SERVICE_DIR)
+
+ifneq ($(findstring wlan_service,$(MTK_WLAN_SERVICE_PATH)),)
+MTK_WLAN_SERVICE=yes
+SERVICE_DIR  := $(MTK_WLAN_SERVICE_PATH)
+$(info SERVICE_DIR is [{$(MTK_WLAN_SERVICE_PATH)}])
+endif
+
+ifeq ($(MTK_WLAN_SERVICE), yes)
+ccflags-y += -DCONFIG_WLAN_SERVICE=1
+ccflags-y += -DCONFIG_TEST_ENGINE_OFFLOAD=1
+ccflags-y += -I$(src)/$(SERVICE_DIR)include
+ccflags-y += -I$(src)/$(SERVICE_DIR)service/include
+ccflags-y += -I$(src)/$(SERVICE_DIR)glue/osal/include
+ccflags-y += -I$(src)/$(SERVICE_DIR)glue/hal/include
+#$(info $$CCFLAG is [{$(ccflags-y)}])
+SERVICE_OBJS := $(SERVICE_DIR)agent/agent.o \
+                $(SERVICE_DIR)service/service_test.o \
+                $(SERVICE_DIR)service/test_engine.o \
+                $(SERVICE_DIR)glue/osal/gen4m/sys_adaption_gen4m.o \
+                $(SERVICE_DIR)glue/osal/gen4m/net_adaption_gen4m.o \
+                $(SERVICE_DIR)glue/hal/gen4m/operation_gen4m.o
+$(MODULE_NAME)-objs  += $(SERVICE_OBJS)
+$(info $$MTK_WLAN_SERVICE is [{$(SERVICE_OBJS)}])
+else
 ccflags-y += -DCONFIG_WLAN_SERVICE=0
 ccflags-y += -DCONFIG_TEST_ENGINE_OFFLOAD=0
+endif
 
 $(MODULE_NAME)-objs  += $(COMMON_OBJS)
 $(MODULE_NAME)-objs  += $(NIC_OBJS)

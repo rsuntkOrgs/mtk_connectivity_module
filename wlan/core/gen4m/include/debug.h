@@ -71,7 +71,9 @@
 #define BUILD_QA_DBG 0
 #endif
 
-#define DBG_DISABLE_ALL_LOG             1
+#ifndef DBG_DISABLE_ALL_LOG
+#define DBG_DISABLE_ALL_LOG             0
+#endif
 
 /*******************************************************************************
  *                    E X T E R N A L   R E F E R E N C E S

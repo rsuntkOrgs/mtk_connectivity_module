@@ -36,9 +36,7 @@
  ******************************************************************************/
 static unsigned int gConnAdpDbgLvl = CONNADP_LOG_INFO;
 
-#define CFG_DISABLE_CONNADP_LOG	1
-
-#if CFG_DISABLE_CONNADP_LOG
+#ifndef CONFIG_MTK_CONNECTIVITY_LOG
 #define CONNADP_LOUD_FUNC(fmt, arg...)
 #define CONNADP_DBG_FUNC(fmt, arg...)
 #define CONNADP_INFO_FUNC(fmt, arg...)
