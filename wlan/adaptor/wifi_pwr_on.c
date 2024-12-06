@@ -22,10 +22,6 @@
 #include <linux/kthread.h>
 #include "wifi_pwr_on.h"
 
-
-
-
-
 MODULE_LICENSE("Dual BSD/GPL");
 
 #define PFX                         "[WIFI-FW] "

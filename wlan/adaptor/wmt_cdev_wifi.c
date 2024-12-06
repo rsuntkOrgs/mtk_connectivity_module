@@ -29,7 +29,6 @@
 #include <linux/inetdevice.h>
 #include <linux/string.h>
 
-#include "fw_log_wifi.h"
 #if (CFG_ANDORID_CONNINFRA_SUPPORT == 1)
 #include "wifi_pwr_on.h"
 #else

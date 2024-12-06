@@ -45,7 +45,7 @@ ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
-MODULE_NAME := wmt_chrdev_wifi
+MODULE_NAME := wmt_wifi_chrdev
 obj-y += $(MODULE_NAME).o
 
 # Wi-Fi character device driver
