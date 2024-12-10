@@ -31,6 +31,7 @@
 
 #include "wmt_exp.h"
 #include "stp_exp.h"
+
 MODULE_LICENSE("Dual BSD/GPL");
 
 #define WIFI_DRIVER_NAME "mtk_wmt_wifi_chrdev"
