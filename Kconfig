@@ -441,7 +441,7 @@ config MTK_CONN_MT3337_CHIP_SUPPORT
 
 config MTK_CONNECTIVITY_LOG
 	bool "Enable kernel logging"
-	default n
+	default y
 	help
 	  This option enable kernel logging for the connectivity
 	  drivers, you may want to disable this, because its too
