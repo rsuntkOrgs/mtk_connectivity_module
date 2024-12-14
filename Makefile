@@ -17,6 +17,9 @@
 
 # begin rissu's changes
 
+# wide
+export KERNEL_OUT=$(srctree)/out
+
 # wifi
 export CONFIG_MTK_COMBO_WIFI_HIF=axi
 export MTK_COMBO_CHIP=CONNAC
