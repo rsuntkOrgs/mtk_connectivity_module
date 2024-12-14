@@ -956,6 +956,7 @@ endif
 # Service git List
 # ---------------------------------------------------
 SERVICE_DIR  := wlan_service/
+MTK_WLAN_SERVICE_PATH := $(SERVICE_DIR)
 
 ifneq ($(findstring wlan_service,$(MTK_WLAN_SERVICE_PATH)),)
 MTK_WLAN_SERVICE=yes
@@ -970,7 +971,7 @@ ccflags-y += -I$(src)/$(SERVICE_DIR)include
 ccflags-y += -I$(src)/$(SERVICE_DIR)service/include
 ccflags-y += -I$(src)/$(SERVICE_DIR)glue/osal/include
 ccflags-y += -I$(src)/$(SERVICE_DIR)glue/hal/include
-$(info $$CCFLAG is [{$(ccflags-y)}])
+#$(info $$CCFLAG is [{$(ccflags-y)}])
 SERVICE_OBJS := $(SERVICE_DIR)agent/agent.o \
                 $(SERVICE_DIR)service/service_test.o \
                 $(SERVICE_DIR)service/test_engine.o \
