@@ -11,6 +11,11 @@
 # GNU General Public License for more details.
 #
 
+# Rissu changes on 14/12/2024
+TOP := $(srctree)/$(src)
+TARGET_BUILD_VARIANT := user
+export TOP TARGET_BUILD_VARIANT
+
 # Connectivity combo driver
 # If KERNELRELEASE is defined, we've been invoked from the
 # kernel build system and can use its language.
