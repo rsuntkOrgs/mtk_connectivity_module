@@ -343,6 +343,8 @@ ifneq ($(filter a34%, $(PROJECT_NAME)),)
     ccflags-y += -DCFG_FS_WIFI5_MIMO
 endif
 
+$(info MTK_ANDROID_WMT = $(MTK_ANDROID_WMT) MTK_ANDROID_EMI = $(MTK_ANDROID_EMI))
+
 ifeq ($(MTK_ANDROID_WMT), y)
     ccflags-y += -DCFG_MTK_ANDROID_WMT=1
     WMT_SUPPORT := y

@@ -25,6 +25,7 @@ export CONFIG_MTK_COMBO_WIFI_HIF=axi
 export MTK_COMBO_CHIP=CONNAC
 export WLAN_CHIP_ID=6765
 export MTK_ANDROID_WMT=y
+export MTK_ANDROID_EMI=y
 export TOP=$(srctree)/$(src)
 export TARGET_BUILD_VARIANT=user
 export WIFI_IP_SET=1
