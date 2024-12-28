@@ -188,19 +188,26 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 			DBGLOG(INIT, ERROR,
 					"[%u] kalSnprintf failed, ret: %d\n",
 					__LINE__, ret);
-		
-		// Rissu: Add for a03s
-		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
-				CFG_FW_NAME_MAX_LEN, "%s_1c_1.bin", // WIFI_RAM_CODE_soc1_0_1c_1.bin
-				apucConnacFwName[ucIdx]);
-		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
-			(*pucNameIdx) += 1;
-		else
-			DBGLOG(INIT, ERROR, "[%u] kalSnprintf failed, ret: %d\n", __LINE__, ret);
 			
 		/* Type 4. WIFI_RAM_CODE_soc1_0.bin */
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
 				CFG_FW_NAME_MAX_LEN, "%s.bin",
+				apucConnacFwName[ucIdx]);
+		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
+			(*pucNameIdx) += 1;
+		else
+			DBGLOG(INIT, ERROR,
+					"[%u] kalSnprintf failed, ret: %d\n",
+					__LINE__, ret);
+					
+		// Rissu: Add support for A03s and A12
+		// Short exp: For some weird reason, A03s is using different firmware file
+		// than other phone.
+		// So, in this case, the errno is -2, No such file or directory.
+		// and here it is, we going to add 5th type.
+		/* Type 5. WIFI_RAM_CODE_soc1_0_1c_1.bin */
+		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
+				CFG_FW_NAME_MAX_LEN, "%s_1c_1.bin",
 				apucConnacFwName[ucIdx]);
 		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
 			(*pucNameIdx) += 1;
