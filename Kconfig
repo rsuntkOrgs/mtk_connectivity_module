@@ -452,7 +452,7 @@ config DRV_BUILD_IN
 		
 config MTK_CONNECTIVITY_LOG
 	bool "Enable or Disable logging for Mediatek connectivity drivers"
-	default y
+	default n
 	help
 		If enabled, this will silent logging.
 		
