@@ -437,7 +437,7 @@ static const struct of_device_id apgps_of_ids[] = {
 };
 #endif
 /*****************************************************************************/
-static int __init gps_emi_mod_init(void)
+static int gps_emi_mod_init(void)
 {
 	int ret = 0;
 	int err = 0;
@@ -494,7 +494,7 @@ err_out:
 }
 
 /*****************************************************************************/
-static void __exit gps_emi_mod_exit(void)
+static void gps_emi_mod_exit(void)
 {
 	if (!devobj) {
 		GPS_ERR("null pointer: %p\n", devobj);
