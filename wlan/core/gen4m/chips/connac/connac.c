@@ -132,6 +132,7 @@ struct PCIE_CHIP_CR_MAPPING connac_bus2chip_cr_mapping[] = {
 };
 #endif /* _HIF_PCIE || _HIF_AXI */
 
+/* Rissu changes @ 04/01/2025 */
 void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 	uint8_t **apucNameTable, uint8_t **apucName,
 	uint8_t *pucNameIdx, uint8_t ucMaxNameIdx)
@@ -178,9 +179,9 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 					"[%u] kalSnprintf failed, ret: %d\n",
 					__LINE__, ret);
 
-		/* Type 3. WIFI_RAM_CODE_soc1_0 */
+		/* Type 3. WIFI_RAM_CODE_soc1_0_1c_1.bin */
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
-				CFG_FW_NAME_MAX_LEN, "%s",
+				CFG_FW_NAME_MAX_LEN, "%s_1c_1.bin",
 				apucConnacFwName[ucIdx]);
 		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
 			(*pucNameIdx) += 1;
@@ -193,25 +194,6 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
 				CFG_FW_NAME_MAX_LEN, "%s.bin",
 				apucConnacFwName[ucIdx]);
-		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
-			(*pucNameIdx) += 1;
-		else
-			DBGLOG(INIT, ERROR,
-					"[%u] kalSnprintf failed, ret: %d\n",
-					__LINE__, ret);
-					
-		// Rissu: Add support for A03s and A12
-		// Short exp: For some weird reason, A03s is using different firmware file
-		// than other phone.
-		// So, in this case, the errno is -2, No such file or directory.
-		// and here it is, we going to add 5th type.
-		/* Type 5. WIFI_RAM_CODE_soc1_0_1c_1.bin */
-		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
-				CFG_FW_NAME_MAX_LEN,
-				"%s_%u%sc_1.bin",
-				apucConnacFwName[ucIdx],
-				CFG_WIFI_IP_SET,
-				aucFlavor);
 		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
 			(*pucNameIdx) += 1;
 		else
