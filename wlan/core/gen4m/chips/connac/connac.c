@@ -207,8 +207,11 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 		// and here it is, we going to add 5th type.
 		/* Type 5. WIFI_RAM_CODE_soc1_0_1c_1.bin */
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
-				CFG_FW_NAME_MAX_LEN, "%s_1c_1.bin",
-				apucConnacFwName[ucIdx]);
+				CFG_FW_NAME_MAX_LEN,
+				"%s_%u%sc_1.bin",
+				apucConnacFwName[ucIdx],
+				CFG_WIFI_IP_SET,
+				aucFlavor);
 		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
 			(*pucNameIdx) += 1;
 		else
