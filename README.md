@@ -9,7 +9,8 @@
 > This driver is intended only for 4.19.x. Not for 4.14.x or below.
 
 ### Mediatek required configurations
-**Make sure to enable this in your device defconfig!**
+> [!NOTE]
+> Make sure to enable this in your device defconfig!
 ```
 CONFIG_MTK_COMBO_BT=y
 CONFIG_MTK_COMBO_WIFI=y
