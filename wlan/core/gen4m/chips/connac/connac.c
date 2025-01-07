@@ -179,6 +179,7 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 					"[%u] kalSnprintf failed, ret: %d\n",
 					__LINE__, ret);
 
+#ifdef __A03S_A12_WORKAROUND__
 		/* Type 3. WIFI_RAM_CODE_soc1_0_1c_1.bin */
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
 				CFG_FW_NAME_MAX_LEN, "%s_1c_1.bin",
@@ -189,7 +190,18 @@ void connacConstructFirmwarePrio(struct GLUE_INFO *prGlueInfo,
 			DBGLOG(INIT, ERROR,
 					"[%u] kalSnprintf failed, ret: %d\n",
 					__LINE__, ret);
-			
+#else
+		/* Type 3. WIFI_RAM_CODE_soc1_0 */
+		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
+				CFG_FW_NAME_MAX_LEN, "%s",
+				apucConnacFwName[ucIdx]);
+		if (ret >= 0 && ret < CFG_FW_NAME_MAX_LEN)
+			(*pucNameIdx) += 1;
+		else
+			DBGLOG(INIT, ERROR,
+					"[%u] kalSnprintf failed, ret: %d\n",
+					__LINE__, ret);
+#endif
 		/* Type 4. WIFI_RAM_CODE_soc1_0.bin */
 		ret = kalSnprintf(*(apucName + (*pucNameIdx)),
 				CFG_FW_NAME_MAX_LEN, "%s.bin",

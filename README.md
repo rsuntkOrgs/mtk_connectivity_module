@@ -24,3 +24,13 @@ CONFIG_DRV_BUILD_IN=y
 ```
 # Bootloop issue
 Bootloop can caused by insmod `/vendor/lib/modules/*.ko` conflicting with drivers inline. Remove `/vendor/lib/modules/*.ko` can solve it.
+
+# Workaround
+- A03s and A12 workaround:
+```sh
+export TARGET_PRODUCT=a12
+```
+or
+```sh
+export TARGET_PRODUCT=a03s
+```

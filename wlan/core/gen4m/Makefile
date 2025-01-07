@@ -12,6 +12,14 @@ ifeq ($(CONFIG_MTK_CONNECTIVITY_LOG),y)
 ccflags-y += -DDBG_DISABLE_ALL_LOG=1
 endif
 
+# Caused by -ENOENT
+# These device is using different firmware.
+WORKAROUND_DEVICE  := a125 a12 a03s a037
+ifneq ($(filter $(WORKAROUND_DEVICE), $(TARGET_DEVICE)),)
+$(info -- Rissu's a03s/a12 workaround applied!)
+ccflags-y += -D__A03S_A12_WORKAROUND__
+endif
+
 # ---------------------------------------------------
 # OS option
 # ---------------------------------------------------
