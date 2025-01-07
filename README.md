@@ -6,7 +6,7 @@
 > Supported platform: `MT6765` and `MT6768` (adding more platform support in the future)
 
 > [!WARNING]
-> This driver is intended only for 4.19.x. Not for 4.14.x or below.
+> This driver is intended only for 4.19.x. Not for 4.14.x or below. for 4.14.x, check [staging-4.14](https://github.com/rsuntkOrgs/mtk_connectivity_module/tree/staging-4.14)
 
 ### Mediatek required configurations
 > [!NOTE]
