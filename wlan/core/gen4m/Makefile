@@ -14,8 +14,11 @@ endif
 
 # Caused by -ENOENT
 # These device is using different firmware.
-WORKAROUND_DEVICE  := a125 a12 a03s a037
-ifneq ($(filter $(WORKAROUND_DEVICE), $(TARGET_DEVICE)),)
+ifeq ($(TARGET_PRODUCT), a03s)
+$(info -- Rissu's a03s/a12 workaround applied!)
+ccflags-y += -D__A03S_A12_WORKAROUND__
+endif
+ifeq ($(TARGET_PRODUCT), a12)
 $(info -- Rissu's a03s/a12 workaround applied!)
 ccflags-y += -D__A03S_A12_WORKAROUND__
 endif
