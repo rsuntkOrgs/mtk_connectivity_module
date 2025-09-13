@@ -48,7 +48,7 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 uint32_t gDbgLevel = WIFI_LOG_DBG;
 
-#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#ifdef CONFIG_MTK_DISABLE_CONNECTIVITY_LOG
 #define WIFI_DBG_FUNC(fmt, arg...)
 #define WIFI_INFO_FUNC(fmt, arg...)
 #define WIFI_INFO_FUNC_LIMITED(fmt, arg...)

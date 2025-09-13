@@ -450,9 +450,9 @@ config DRV_BUILD_IN
 	help
 		If enabled, this will force some module build as inline
 		
-config MTK_CONNECTIVITY_LOG
+config MTK_DISABLE_CONNECTIVITY_LOG
 	bool "Enable or Disable logging for Mediatek connectivity drivers"
-	default n
+	default y
 	help
 		If enabled, this will silent logging.
 		

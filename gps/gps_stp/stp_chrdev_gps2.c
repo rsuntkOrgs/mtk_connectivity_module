@@ -71,7 +71,7 @@
 
 static UINT32 g2DbgLevel = GPS2_LOG_DBG;
 
-#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#ifdef CONFIG_MTK_DISABLE_CONNECTIVITY_LOG
 #define GPS2_DBG_FUNC(fmt, arg...)
 #define GPS2_INFO_FUNC(fmt, arg...)
 #define GPS2_WARN_FUNC(fmt, arg...)

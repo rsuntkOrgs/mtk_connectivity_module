@@ -40,7 +40,7 @@
 #define DFT_TAG         "[WMT-DFT]"
 #endif
 
-#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#ifdef CONFIG_MTK_DISABLE_CONNECTIVITY_LOG
 #define WMT_LOUD_FUNC(fmt, arg...)
 #define WMT_INFO_FUNC(fmt, arg...)
 #define WMT_WARN_FUNC(fmt, arg...)

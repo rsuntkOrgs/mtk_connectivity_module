@@ -3,24 +3,9 @@ ifeq ($(CONFIG_MTK_PLATFORM),)
 endif
 MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 
-ifeq ($(TARGET_PRODUCT),)
-$(warning TARGET_PRODUCT is empty! using default option.)
-endif
-
 # disable logs!
-ifeq ($(CONFIG_MTK_CONNECTIVITY_LOG),y)
+ifeq ($(CONFIG_MTK_DISABLE_CONNECTIVITY_LOG),y)
 ccflags-y += -DDBG_DISABLE_ALL_LOG=1
-endif
-
-# Caused by -ENOENT
-# These device is using different firmware.
-ifeq ($(TARGET_PRODUCT), a03s)
-$(info -- Rissu's a03s/a12 workaround applied!)
-ccflags-y += -D__A03S_A12_WORKAROUND__
-endif
-ifeq ($(TARGET_PRODUCT), a12)
-$(info -- Rissu's a03s/a12 workaround applied!)
-ccflags-y += -D__A03S_A12_WORKAROUND__
 endif
 
 # ---------------------------------------------------

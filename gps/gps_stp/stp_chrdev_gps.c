@@ -84,7 +84,7 @@ static UINT32 md_status_addr;
 
 static UINT32 gDbgLevel = GPS_LOG_DBG;
 
-#ifndef CONFIG_MTK_CONNECTIVITY_LOG
+#ifdef CONFIG_MTK_DISABLE_CONNECTIVITY_LOG
 #define GPS_DBG_FUNC(fmt, arg...)
 #define GPS_INFO_FUNC(fmt, arg...)
 #define GPS_WARN_FUNC(fmt, arg...)
