@@ -2582,7 +2582,7 @@ void fwDlGetReleaseManifest(struct WIFI_VER_INFO *prVerInfo,
 void wlanReadRamCodeReleaseManifest(uint8_t *pucManifestBuffer,
 		uint32_t *pu4ManifestSize, uint32_t u4BufferMaxSize)
 {
-#define FW_FILE_NAME_TOTAL 9
+#define FW_FILE_NAME_TOTAL 8
 #define FW_FILE_NAME_MAX_LEN 64
 	const struct firmware *fw_entry = NULL;
 	struct WIFI_VER_INFO *prVerInfo = NULL;
